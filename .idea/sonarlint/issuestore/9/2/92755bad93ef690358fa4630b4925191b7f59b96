@@ -1,0 +1,17 @@
+
+1	css:S4658é "Unexpected empty block(ÛÁÅÆûÿÿÿÿ
+U	css:S46668";Unexpected duplicate selector "body", first used at line 48(×ŸÌíıÿÿÿÿ
+X	css:S4666Ï";Unexpected duplicate selector "html", first used at line 34(óàÂ8¡É¸¦¯1
+]	css:S4666ç";Unexpected duplicate selector "body", first used at line 48(×ŸÌíıÿÿÿÿ8¡É¸¦¯1
+[	css:S4666“"9Unexpected duplicate selector "hr", first used at line 79(ÄÈ÷¨øÿÿÿÿ8¡É¸¦¯1
+Z	css:S4666®"=Unexpected duplicate selector "table", first used at line 159(úíÀò8¡É¸¦¯1
+	css:S4666Î"sUnexpected duplicate selector "button,
+optgroup,
+select,
+textarea", first used at line 174 (no-duplicate-selectors)(İà´8èÍº¦¯1
+‚	css:S4666Ş"eUnexpected duplicate selector "pre,
+code,
+kbd,
+samp", first used at line 112 (no-duplicate-selectors)(“õ€Î8¢É¸¦¯1
+d	css:S4666§"BUnexpected duplicate selector ".container", first used at line 699(ÿñå±ıÿÿÿÿ8¢É¸¦¯1
+W	css:S4666„":Unexpected duplicate selector "*", first used at line 3013(ßÓ˜‡8¢É¸¦¯1

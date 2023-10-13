@@ -1,27 +1,61 @@
+/*@import url('normalize.css');*/
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+.Mui-focused fieldset {
+  border-color: green !important;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+textarea:focus,
+input:focus {
+  outline: none !important;
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+*:focus {
+  outline: none !important;
+}
+
+.Mui-focused {
+  color: green !important;
+}
+
+.Mui-button {
+  background-color: green !important;
+  color: #fff !important;
+  padding: 1rem 2rem !important;
+}
+
+.Mui-button:hover {
+  background-color: black !important;
+}
+
+.Mui-button:disabled {
+  cursor: not-allowed !important;
+}
+
+.Mui-mt-5 {
+  margin-top: 1.25rem !important;
+}
+
+.helper-text {
+  color: red !important;
+}
+
+[type='text'],
+[type='email'],
+[type='url'],
+[type='password'],
+[type='number'],
+[type='date'],
+[type='datetime-local'],
+[type='month'],
+[type='search'],
+[type='tel'],
+[type='time'],
+[type='week'],
+[multiple],
+textarea,
+select {
+  outline: none !important;
 }

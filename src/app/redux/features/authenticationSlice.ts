@@ -1,0 +1,76 @@
+import {
+  ITokens,
+  IUserDetails,
+} from '@/app/Interfaces/authenticationInterface';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import axios from '@/app/utility/axios';
+import { serverError } from '@/app/utility/constants';
+
+type authenticationState = {
+  token: ITokens | undefined;
+  user: IUserDetails | undefined;
+  error: string;
+  status: 'idle' | 'fulfilled' | 'pending';
+};
+
+const initialState: authenticationState = {
+  token: JSON.parse(localStorage.getItem('token')!) || undefined,
+  user: JSON.parse(localStorage.getItem('user')!) || undefined,
+  error: '',
+  status: 'idle',
+};
+
+export const login = createAsyncThunk(
+  'login',
+  async (credentials, { dispatch }) => {
+    try {
+      const response = await axios.post('/authentication/login', credentials);
+      dispatch(updateUser(response.data.user));
+      dispatch(
+        updateToken({
+          access: response.data.access_token,
+          refresh: response.data.refresh_token,
+        }),
+      );
+      window.location.href = '/dashboard';
+    } catch (err: any) {
+      dispatch(setError(err.response.data.message || serverError));
+    }
+  },
+);
+export const authentication = createSlice({
+  name: 'authentication',
+  initialState,
+  reducers: {
+    updateUser: (state, action) => {
+      state.user = action.payload;
+      localStorage.setItem('user', JSON.stringify(state.user));
+    },
+    setError: (state, action) => {
+      state.error = action.payload;
+    },
+    updateToken: (state, action) => {
+      state.token = {
+        access: action.payload.access,
+        refresh: action.payload.refresh,
+      };
+      localStorage.setItem('token', JSON.stringify(state.token));
+    },
+  },
+  extraReducers(builder) {
+    builder
+      .addCase(login.pending, state => {
+        state.status = 'pending';
+      })
+      .addCase(login.fulfilled, state => {
+        state.status = 'fulfilled';
+      })
+      .addCase(login.rejected, state => {
+        state.status = 'idle';
+      });
+  },
+});
+
+export const { updateUser, setError, updateToken } = authentication.actions;
+
+export default authentication.reducer;
