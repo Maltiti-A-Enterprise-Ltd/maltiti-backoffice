@@ -4,7 +4,8 @@ import { redirect } from 'next/navigation';
 
 export default function ProtectAuth(Component: any) {
   return function ProtectAuth(props: any) {
-    const token = JSON.parse(localStorage.getItem('token')!);
+    const token =
+      window !== undefined ? JSON.parse(localStorage.getItem('token')!) : '';
 
     useEffect(() => {
       if (token) {

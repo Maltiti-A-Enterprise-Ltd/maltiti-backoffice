@@ -12,7 +12,8 @@ export const axiosPrivate = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
-const token = JSON.parse(window?.localStorage.getItem('token')!);
+const token =
+  window !== undefined ? JSON.parse(localStorage.getItem('token')!) : '';
 axiosPrivate.interceptors.request.use(
   config => {
     if (!config.headers['Authorization']) {
@@ -39,7 +40,8 @@ axiosPrivate.interceptors.response.use(
 );
 
 const refreshToken = async () => {
-  const token = JSON.parse(window.localStorage.getItem('token')!);
+  const token =
+    window !== undefined ? JSON.parse(localStorage.getItem('token')!) : '';
   const refresh = token?.refresh;
   try {
     const response = await axios.post(
