@@ -93,3 +93,9 @@ Y
 )src/app/components/PrivateRoute/index.tsx,9\0\907afa088f47d1a3d32ff737c84e45e0cc63560e
 X
 (src/app/components/ProtectAuth/index.tsx,c\e\ce8755c368e4d544e426d69cb46f93d6f2a60d9e
+\
+,src/app/Interfaces/cooperatives.interface.ts,f\7\f76daca8d6ff6a2a367084129ed2ff758dbe7b54
+[
++src/app/redux/features/cooperativesSlice.ts,9\3\9364605e91e76b45c3461642c541f9916977d8e9
+L
+src/app/utility/constants.ts,7\d\7d31cbb5febe9397bad1b2c67f553a5f5619cfe6

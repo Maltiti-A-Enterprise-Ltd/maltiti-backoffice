@@ -62,7 +62,7 @@ export default function Cooperatives() {
                     'px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-600 text-blueGray-200 border-blueGray-500'
                   }
                 >
-                  Cooperative
+                  Community
                 </th>
                 <th
                   className={
@@ -96,15 +96,15 @@ export default function Cooperatives() {
               {cooperatives.map(cooperative => (
                 <tr key={cooperative.id}>
                   <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">
-                    <img
-                      src="/img/bootstrap.jpg"
-                      className="h-12 w-12 bg-white rounded-full border"
-                      alt="..."
-                    ></img>{' '}
+                    {/*<img*/}
+                    {/*  src="/img/bootstrap.jpg"*/}
+                    {/*  className="h-12 w-12 bg-white rounded-full border"*/}
+                    {/*  alt="..."*/}
+                    {/*></img>{' '}*/}
                     <span className={'ml-3 font-bold'}>{cooperative.name}</span>
                   </th>
                   <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                    $2,500 USD
+                    {cooperative.community}
                   </td>
                   <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                     <i className="fas fa-circle text-orange-500 mr-2"></i>{' '}

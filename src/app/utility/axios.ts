@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { store } from '@/app/redux/store';
+import { refreshTokenUpdate } from '@/app/redux/features/authenticationSlice';
 const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export default axios.create({
@@ -10,8 +12,7 @@ export const axiosPrivate = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
-const token = JSON.parse(localStorage.getItem('token')!);
-
+const token = JSON.parse(window?.localStorage.getItem('token')!);
 axiosPrivate.interceptors.request.use(
   config => {
     if (!config.headers['Authorization']) {
@@ -21,3 +22,43 @@ axiosPrivate.interceptors.request.use(
   },
   error => Promise.reject(error),
 );
+
+axiosPrivate.interceptors.response.use(
+  response => response,
+
+  async error => {
+    const prevRequest = error?.config;
+    if (error?.response?.status === 401 && !prevRequest?.sent) {
+      prevRequest.sent = true;
+      const newAccessToken = await refreshToken();
+      prevRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
+      return axiosPrivate(prevRequest);
+    }
+    return Promise.reject(error);
+  },
+);
+
+const refreshToken = async () => {
+  const token = JSON.parse(window.localStorage.getItem('token')!);
+  const refresh = token?.refresh;
+  try {
+    const response = await axios.post(
+      `${BASE_URL}/authentication/refresh-token/`,
+      { refresh_token: refresh },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token.refresh}`,
+        },
+      },
+    );
+
+    token['access'] = response?.data?.access_token;
+    store.dispatch(refreshTokenUpdate(response.data.access_token));
+    localStorage.setItem('token', JSON.stringify(token));
+    return response.data.access_token;
+  } catch (error) {
+    // localStorage.clear();
+    // window.location.reload();
+  }
+};

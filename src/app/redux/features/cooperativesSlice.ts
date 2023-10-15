@@ -28,7 +28,7 @@ export const addCooperative = createAsyncThunk(
       );
       dispatch(updateAddModalState());
       dispatch(updateCooperative(response.data.data));
-      toast.success('🦄 Wow so easy!', {
+      toast.success(response.data.message, {
         position: 'top-right',
         autoClose: 5000,
         hideProgressBar: false,
@@ -39,7 +39,8 @@ export const addCooperative = createAsyncThunk(
         theme: 'colored',
       });
     } catch (err: any) {
-      toast.error(err.response.data.message || serverError);
+      console.log(err);
+      toast.error(err.response.data.error || serverError);
     }
   },
 );

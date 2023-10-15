@@ -4,7 +4,7 @@ import { Inter } from 'next/font/google';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import { Providers } from '@/app/redux/provider';
 // import './tailwind.css';
-
+import 'react-toastify/dist/ReactToastify.css';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {

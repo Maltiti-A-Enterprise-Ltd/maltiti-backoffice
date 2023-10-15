@@ -4,7 +4,7 @@ import {
 } from '@/app/Interfaces/authenticationInterface';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from '@/app/utility/axios';
-import { serverError } from '@/app/utility/constants';
+import { serverError, token, user } from '@/app/utility/constants';
 
 type authenticationState = {
   token: ITokens | undefined;
@@ -14,8 +14,8 @@ type authenticationState = {
 };
 
 const initialState: authenticationState = {
-  token: JSON.parse(localStorage.getItem('token')!) || undefined,
-  user: JSON.parse(localStorage.getItem('user')!) || undefined,
+  token: token() || undefined,
+  user: user() || undefined,
   error: '',
   status: 'idle',
 };
@@ -38,6 +38,7 @@ export const login = createAsyncThunk(
     }
   },
 );
+
 export const authentication = createSlice({
   name: 'authentication',
   initialState,
@@ -56,6 +57,10 @@ export const authentication = createSlice({
       };
       localStorage.setItem('token', JSON.stringify(state.token));
     },
+    refreshTokenUpdate: (state, action) => {
+      console.log('Refresh token');
+      if (state.token) state.token.access = action.payload;
+    },
   },
   extraReducers(builder) {
     builder
@@ -71,6 +76,7 @@ export const authentication = createSlice({
   },
 });
 
-export const { updateUser, setError, updateToken } = authentication.actions;
+export const { updateUser, setError, updateToken, refreshTokenUpdate } =
+  authentication.actions;
 
 export default authentication.reducer;
