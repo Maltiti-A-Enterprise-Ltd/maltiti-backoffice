@@ -73,6 +73,11 @@ export const authentication = createSlice({
       console.log('Refresh token');
       if (state.token) state.token.access = action.payload;
     },
+    clearTokens: state => {
+      localStorage.clear();
+      state.token = undefined;
+      state.user = undefined;
+    },
   },
   extraReducers(builder) {
     builder
@@ -88,7 +93,12 @@ export const authentication = createSlice({
   },
 });
 
-export const { updateUser, setError, updateToken, refreshTokenUpdate } =
-  authentication.actions;
+export const {
+  updateUser,
+  setError,
+  updateToken,
+  refreshTokenUpdate,
+  clearTokens,
+} = authentication.actions;
 
 export default authentication.reducer;

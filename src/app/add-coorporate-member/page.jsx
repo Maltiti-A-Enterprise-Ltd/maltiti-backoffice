@@ -9,15 +9,17 @@ import {
   Select,
   TextField,
 } from '@mui/material';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import SignaturePad from 'signature_pad';
-import { Formik } from 'formik';
 import {
   addCooperative,
   getAllCooperatives,
 } from '../redux/features/cooperativesSlice';
 import { educationLevels, idType, regions } from '../utility/constants';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import ImageUploadPreview from '../components/ImageUploadPreview';
+import { Formik } from 'formik';
+import Image from 'next/image';
 
 const AddMember = () => {
   const dispatch = useAppDispatch();
@@ -25,12 +27,28 @@ const AddMember = () => {
     state => state.cooperative.cooperativeOptions,
   );
   const signaturePadRef = useRef(null);
+  const [memberImage, setMemberImage] = useState('');
 
   useEffect(() => {
     const canvas = document.querySelector('canvas');
     signaturePadRef.current = new SignaturePad(canvas);
     dispatch(getAllCooperatives());
   }, []);
+
+  const handleImageUpload = event => {
+    const file = event.target.files[0];
+    // Check if the file is an image
+    if (file?.type.startsWith('image/')) {
+      const reader = new FileReader();
+
+      reader.onload = e => {
+        setMemberImage(e.target.result);
+      };
+
+      // Read the file as a data URL
+      reader.readAsDataURL(file);
+    }
+  };
 
   return (
     <>
@@ -52,6 +70,7 @@ const AddMember = () => {
         <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
           <Formik
             initialValues={{
+              image: '',
               cooperative: '',
               name: '',
               dob: '',
@@ -70,24 +89,7 @@ const AddMember = () => {
               farmSize: '',
             }}
             validate={values => {
-              const errors = {
-                cooperative: '',
-                name: '',
-                dob: '',
-                idType: '',
-                idNumber: '',
-                houseNumber: '',
-                gpsAddress: '',
-                phoneNumber: '',
-                community: '',
-                region: '',
-                district: '',
-                levelOfEducation: '',
-                mainOccupation: '',
-                secondaryOccupation: '',
-                cropsProduced: '',
-                farmSize: '',
-              };
+              const errors = {};
               if (!values.name) {
                 errors.name = 'Name is required';
               }
@@ -134,19 +136,78 @@ const AddMember = () => {
               if (!values.region) {
                 errors.region = 'Region is required';
               }
+              if (!values.image) {
+                errors.image = 'An image is is required';
+              }
               return errors;
             }}
             onSubmit={values => {
               alert(JSON.stringify(values, null, 2));
             }}
+            validateOnMount={true}
+            validateOnChange={true}
           >
-            {({ values, errors, touched, handleBlur, handleChange }) => (
-              <form
-                onSubmit={event => {
-                  event.preventDefault(); // @ts-ignore
-                  dispatch(addCooperative(values));
-                }}
-              >
+            {({
+              values,
+              errors,
+              touched,
+              handleBlur,
+              handleChange,
+              handleSubmit,
+            }) => (
+              <form onSubmit={handleSubmit}>
+                {/*<ImageUploadPreview*/}
+                {/*  // onImageUpload={imageFile => {*/}
+                {/*  //   values.image = imageFile;*/}
+                {/*  //   console.log('d', values);*/}
+                {/*  // }}*/}
+                {/*  onBlur={handleBlur}*/}
+                {/*  onChange={handleChange}*/}
+                {/*  name={'image'}*/}
+                {/*  // value={values.image}*/}
+                {/*/>*/}
+                <div className={'flex gap-x-3'}>
+                  <div
+                    className={
+                      'border flex justify-center items-center border-gray-600 border-dashed h-40 w-40'
+                    }
+                  >
+                    {memberImage ? (
+                      <Image
+                        alt={'member image'}
+                        height={200}
+                        width={200}
+                        src={memberImage}
+                      />
+                    ) : (
+                      <span>Upload Image</span>
+                    )}
+                  </div>
+                  <div className={'grid items-center justify-center'}>
+                    <label
+                      className="bg-green px-3 text-white max-w-[10rem] text-center hover:bg-black cursor-pointer py-3 rounded-md"
+                      htmlFor="profileImage"
+                    >
+                      Upload Image
+                    </label>
+                    <input
+                      id="profileImage"
+                      accept="image/*"
+                      type="file"
+                      className="hidden"
+                      value={values.image}
+                      onChange={e => {
+                        handleChange(e);
+                        handleImageUpload(e);
+                      }}
+                      onBlur={handleBlur}
+                      name={'image'}
+                    />
+                  </div>
+                </div>
+                <FormHelperText id="id-type" className={'helper-text'}>
+                  {errors.image && touched.image && errors.image}
+                </FormHelperText>
                 <h6 className="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">
                   Member Information and Identification
                 </h6>
@@ -502,13 +563,14 @@ const AddMember = () => {
                       onClick={() => {
                         signaturePadRef.current.clear();
                       }}
-                      className="hover:bg-black px-4 py-2 mt-6 text-white bg-green"
+                      className="mt-10 Mui-button"
+                      type="button"
                     >
                       Reset
                     </Button>
                   </div>
                 </div>
-                <Button className="hover:bg-black float-right px-8 py-4 mt-6 text-white bg-green">
+                <Button type={'submit'} className="float-right mt-6 Mui-button">
                   Save
                 </Button>
               </form>

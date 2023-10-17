@@ -1,6 +1,9 @@
 import axios from 'axios';
 import { store } from '@/app/redux/store';
-import { refreshTokenUpdate } from '@/app/redux/features/authenticationSlice';
+import {
+  clearTokens,
+  refreshTokenUpdate,
+} from '@/app/redux/features/authenticationSlice';
 const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export default axios.create({
@@ -60,6 +63,7 @@ const refreshToken = async () => {
     return response.data.access_token;
   } catch (error) {
     localStorage.clear();
-    window.location.reload();
+    store.dispatch(clearTokens());
+    window.location.href = '/';
   }
 };
