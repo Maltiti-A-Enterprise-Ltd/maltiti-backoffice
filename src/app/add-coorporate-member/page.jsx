@@ -5,6 +5,7 @@ import React, { useEffect, useRef } from 'react';
 import SignaturePad from 'signature_pad';
 import { Formik } from 'formik';
 import { formData } from './formData';
+import { cooperativeMemberValidation } from './validation';
 
 const AddMember = () => {
   const signaturePadRef = useRef(null);
@@ -36,23 +37,7 @@ const AddMember = () => {
           <Formik
             initialValues={formData}
             validate={values => {
-              const errors = formData;
-              if (!values.name) {
-                errors.name = 'Name is required';
-              }
-              if (!values.community) {
-                errors.community = 'community is required';
-              }
-              if (!values.re) {
-                errors.registrationFee = 'Registration Fee is required';
-              }
-              if (!values.monthlyFee) {
-                errors.monthlyFee = 'Monthly Fee is required';
-              }
-              if (!values.minimalShare) {
-                errors.minimalShare = 'Minimum Share Capital is required';
-              }
-              return errors;
+              return cooperativeMemberValidation(values);
             }}
             onSubmit={values => {
               alert(JSON.stringify(values, null, 2));
@@ -99,10 +84,8 @@ const AddMember = () => {
                       onBlur={handleBlur}
                       value={values.name}
                     />
-                    <FormHelperText id="full-name" className={'text-red-800'}>
-                      {errors.name &&
-                        touched.minimalShare &&
-                        errors.minimalShare}
+                    <FormHelperText id="full-name" className={'helper-text'}>
+                      {errors.name && touched.name && errors.name}
                     </FormHelperText>
                   </div>
                   <div className="w-full lg:w-6/12 px-4">
