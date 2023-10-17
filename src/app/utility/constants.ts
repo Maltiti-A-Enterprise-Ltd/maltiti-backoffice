@@ -48,3 +48,22 @@ export const educationLevels = [
   { name: 'Doctorate (Ph.D.)', value: 'Doctorate (Ph.D.)' },
   { name: 'Other', value: 'Other' },
 ];
+
+export const requiredFields = {
+  name: 'Name is required',
+  community: 'Community is required',
+  cooperative: 'Cooperative is required',
+  dob: 'Date of birth is required',
+  district: 'District is required',
+  cropsProduced: 'Crops produced is required',
+  farmSize: 'Farm size is required',
+  gpsAddress: 'GPS Address is required',
+  houseNumber: 'House number is required',
+  idNumber: 'ID Number is required',
+  idType: 'ID Type is required',
+  levelOfEducation: 'Highest level of education is required',
+  mainOccupation: 'Main Occupation is required',
+  phoneNumber: 'Phone number is required',
+  region: 'Region is required',
+  image: 'An image is required',
+};

@@ -2,6 +2,7 @@
 import FormNavBar from '../components/Navbar/formNavBar';
 import {
   Button,
+  CircularProgress,
   FormControl,
   FormHelperText,
   InputLabel,
@@ -11,21 +12,24 @@ import {
 } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
 import SignaturePad from 'signature_pad';
+import { getAllCooperatives } from '../redux/features/cooperativesSlice';
 import {
-  addCooperative,
-  getAllCooperatives,
-} from '../redux/features/cooperativesSlice';
-import { educationLevels, idType, regions } from '../utility/constants';
+  educationLevels,
+  idType,
+  regions,
+  requiredFields,
+} from '../utility/constants';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import ImageUploadPreview from '../components/ImageUploadPreview';
 import { Formik } from 'formik';
 import Image from 'next/image';
+import { addMember } from '../redux/features/cooperativeMemberSlice';
 
 const AddMember = () => {
   const dispatch = useAppDispatch();
   const cooperativeOptions = useAppSelector(
     state => state.cooperative.cooperativeOptions,
   );
+  const status = useAppSelector(state => state.cooperativeMember.addStatus);
   const signaturePadRef = useRef(null);
   const [memberImage, setMemberImage] = useState('');
 
@@ -33,7 +37,7 @@ const AddMember = () => {
     const canvas = document.querySelector('canvas');
     signaturePadRef.current = new SignaturePad(canvas);
     dispatch(getAllCooperatives());
-  }, []);
+  }, [dispatch]);
 
   const handleImageUpload = event => {
     const file = event.target.files[0];
@@ -90,59 +94,15 @@ const AddMember = () => {
             }}
             validate={values => {
               const errors = {};
-              if (!values.name) {
-                errors.name = 'Name is required';
-              }
-              if (!values.community) {
-                errors.community = 'community is required';
-              }
-              if (!values.cooperative) {
-                errors.cooperative = 'Cooperative is required';
-              }
-              if (!values.dob) {
-                errors.dob = 'Date of birth is required';
-              }
-              if (!values.district) {
-                errors.district = 'District is required';
-              }
-              if (!values.cropsProduced) {
-                errors.cropsProduced = 'Crops produced is required';
-              }
-              if (!values.farmSize) {
-                errors.farmSize = 'Farm size is required';
-              }
-              if (!values.gpsAddress) {
-                errors.gpsAddress = 'GPS Address is required';
-              }
-              if (!values.houseNumber) {
-                errors.houseNumber = 'House number is required';
-              }
-              if (!values.idNumber) {
-                errors.idNumber = 'ID Number is required';
-              }
-              if (!values.idType) {
-                errors.idType = 'ID Type is required';
-              }
-              if (!values.levelOfEducation) {
-                errors.levelOfEducation =
-                  'Highest level of education is required';
-              }
-              if (!values.mainOccupation) {
-                errors.mainOccupation = 'Main Occupation is required';
-              }
-              if (!values.phoneNumber) {
-                errors.phoneNumber = 'Phone number is required';
-              }
-              if (!values.region) {
-                errors.region = 'Region is required';
-              }
-              if (!values.image) {
-                errors.image = 'An image is is required';
+              for (const field in requiredFields) {
+                if (!values[field]) {
+                  errors[field] = requiredFields[field];
+                }
               }
               return errors;
             }}
             onSubmit={values => {
-              alert(JSON.stringify(values, null, 2));
+              dispatch(addMember(values));
             }}
             validateOnMount={true}
             validateOnChange={true}
@@ -570,9 +530,18 @@ const AddMember = () => {
                     </Button>
                   </div>
                 </div>
-                <Button type={'submit'} className="float-right mt-6 Mui-button">
-                  Save
-                </Button>
+                {status === 'pending' ? (
+                  <div className={'mt-6 flex item-center justify-center'}>
+                    <CircularProgress color="success" />
+                  </div>
+                ) : (
+                  <Button
+                    type={'submit'}
+                    className="float-right mt-6 Mui-button"
+                  >
+                    Save
+                  </Button>
+                )}
               </form>
             )}
           </Formik>

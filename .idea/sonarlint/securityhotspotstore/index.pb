@@ -107,3 +107,9 @@ Y
 )src/app/add-coorporate-member/formData.ts,d\f\dfab964c61c1e8a2d9aef18750e9a495fd348a72
 [
 +src/app/add-coorporate-member/validation.ts,1\f\1fb96f15a4a63268df6cd489d0215daf9a79bc3d
+_
+/src/app/components/ImageUploadPreview/index.tsx,6\0\602ce2f92450bf146e0c1d61421aaac5de122a1e
+a
+1src/app/Interfaces/cooperativeMember.interface.ts,a\a\aaec24a0b3769c46233df027d91c5d3ad447b23a
+`
+0src/app/redux/features/cooperativeMemberSlice.js,b\4\b49b334c1af167183ad8324f2a5c1311297d4c1a
