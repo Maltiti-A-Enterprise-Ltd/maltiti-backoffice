@@ -5,6 +5,7 @@ export interface ITokens {
 
 export interface IUserDetails {
   id: string;
+  name: string;
   email: string;
   userType: string;
   permissions?: string;

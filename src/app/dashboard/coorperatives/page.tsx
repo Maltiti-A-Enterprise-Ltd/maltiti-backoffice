@@ -2,10 +2,14 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
-// components
-
-import TableDropdown from '../../components/Dropdowns/TableDropdown';
-import { Button, Modal, Typography } from '@mui/material';
+import {
+  Button,
+  CircularProgress,
+  Menu,
+  MenuItem,
+  Modal,
+  Typography,
+} from '@mui/material';
 import AddCooperative from '@/app/components/addCooperative';
 import { modalStyle } from '@/app/utility/styles';
 import { Box } from '@mui/system';
@@ -15,15 +19,27 @@ import {
   updateAddModalState,
 } from '@/app/redux/features/cooperativesSlice';
 import { ToastContainer } from 'react-toastify';
+import AlertDialog from '@/app/components/ConfirmationModal';
 
 export default function Cooperatives() {
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   const dispatch = useAppDispatch();
   const isModalOpen = useAppSelector(state => state.cooperative.isAddModalOpen);
   const cooperatives = useAppSelector(state => state.cooperative.cooperatives);
+  const status = useAppSelector(
+    state => state.cooperative.getCooperativesStatus,
+  );
 
   useEffect(() => {
     dispatch(getAllCooperatives());
-  }, []);
+  }, [dispatch]);
   return (
     <>
       <div
@@ -47,113 +63,141 @@ export default function Cooperatives() {
         </div>
         <div className="block w-full overflow-x-auto">
           {/* Projects table */}
-          <table className="items-center w-full bg-transparent border-collapse">
-            <thead>
-              <tr>
-                <th
-                  className={
-                    'px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-600 text-blueGray-200 border-blueGray-500'
-                  }
-                >
-                  Name
-                </th>
-                <th
-                  className={
-                    'px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-600 text-blueGray-200 border-blueGray-500'
-                  }
-                >
-                  Community
-                </th>
-                <th
-                  className={
-                    'px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-600 text-blueGray-200 border-blueGray-500'
-                  }
-                >
-                  Phone
-                </th>
-                <th
-                  className={
-                    'px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-600 text-blueGray-200 border-blueGray-500'
-                  }
-                >
-                  Address
-                </th>
-                <th
-                  className={
-                    'px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-600 text-blueGray-200 border-blueGray-500'
-                  }
-                >
-                  Completion
-                </th>
-                <th
-                  className={
-                    'px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-600 text-blueGray-200 border-blueGray-500'
-                  }
-                ></th>
-              </tr>
-            </thead>
-            <tbody>
-              {cooperatives.map(cooperative => (
-                <tr key={cooperative.id}>
-                  <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">
-                    {/*<img*/}
-                    {/*  src="/img/bootstrap.jpg"*/}
-                    {/*  className="h-12 w-12 bg-white rounded-full border"*/}
-                    {/*  alt="..."*/}
-                    {/*></img>{' '}*/}
-                    <span className={'ml-3 font-bold'}>{cooperative.name}</span>
+          {status === 'pending' ? (
+            <div className={'mt-6 h-40 flex item-center justify-center'}>
+              <CircularProgress color="success" />
+            </div>
+          ) : (
+            <table className="items-center w-full bg-transparent border-collapse">
+              <thead>
+                <tr>
+                  <th
+                    className={
+                      'px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-600 text-blueGray-200 border-blueGray-500'
+                    }
+                  >
+                    Name
                   </th>
-                  <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                    {cooperative.community}
-                  </td>
-                  <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                    <i className="fas fa-circle text-orange-500 mr-2"></i>{' '}
-                    pending
-                  </td>
-                  <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                    <div className="flex">
-                      <img
-                        src="/img/team-1-800x800.jpg"
-                        alt="..."
-                        className="w-10 h-10 rounded-full border-2 border-blueGray-50 shadow"
-                      ></img>
-                      <img
-                        src="/img/team-2-800x800.jpg"
-                        alt="..."
-                        className="w-10 h-10 rounded-full border-2 border-blueGray-50 shadow -ml-4"
-                      ></img>
-                      <img
-                        src="/img/team-3-800x800.jpg"
-                        alt="..."
-                        className="w-10 h-10 rounded-full border-2 border-blueGray-50 shadow -ml-4"
-                      ></img>
-                      <img
-                        src="/img/team-4-470x470.png"
-                        alt="..."
-                        className="w-10 h-10 rounded-full border-2 border-blueGray-50 shadow -ml-4"
-                      ></img>
-                    </div>
-                  </td>
-                  <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                    <div className="flex items-center">
-                      <span className="mr-2">60%</span>
-                      <div className="relative w-full">
-                        <div className="overflow-hidden h-2 text-xs flex rounded bg-red-200">
-                          <div
-                            style={{ width: '60%' }}
-                            className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-red-500"
-                          ></div>
-                        </div>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-right">
-                    <TableDropdown />
-                  </td>
+                  <th
+                    className={
+                      'px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-600 text-blueGray-200 border-blueGray-500'
+                    }
+                  >
+                    Community
+                  </th>
+                  <th
+                    className={
+                      'px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-600 text-blueGray-200 border-blueGray-500'
+                    }
+                  >
+                    Fees
+                  </th>
+                  <th
+                    className={
+                      'px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-600 text-blueGray-200 border-blueGray-500'
+                    }
+                  >
+                    Leaders
+                  </th>
+                  <th
+                    className={
+                      'px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-600 text-blueGray-200 border-blueGray-500'
+                    }
+                  >
+                    Minimal Shares
+                  </th>
+                  <th
+                    className={
+                      'px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-600 text-blueGray-200 border-blueGray-500'
+                    }
+                  ></th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {cooperatives.map(cooperative => (
+                  <tr key={cooperative.id}>
+                    <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">
+                      {/*<img*/}
+                      {/*  src="/img/bootstrap.jpg"*/}
+                      {/*  className="h-12 w-12 bg-white rounded-full border"*/}
+                      {/*  alt="..."*/}
+                      {/*></img>{' '}*/}
+                      <span className={'ml-3 font-bold'}>
+                        {cooperative.name}
+                      </span>
+                    </th>
+                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                      {cooperative.community}
+                    </td>
+                    <td className="border-t-0 flex flex-col px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                      <span>
+                        {'GH₵ '}
+                        {cooperative.monthlyFee} {'monthly'}
+                      </span>
+                      <span>
+                        {'GH₵ '}
+                        {cooperative.registrationFee} {' for registration'}
+                      </span>
+                    </td>
+                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                      <div className="flex">
+                        <img
+                          src="/img/team-1-800x800.jpg"
+                          alt="..."
+                          className="w-10 h-10 rounded-full border-2 border-blueGray-50 shadow"
+                        ></img>
+                        <img
+                          src="/img/team-2-800x800.jpg"
+                          alt="..."
+                          className="w-10 h-10 rounded-full border-2 border-blueGray-50 shadow -ml-4"
+                        ></img>
+                        <img
+                          src="/img/team-3-800x800.jpg"
+                          alt="..."
+                          className="w-10 h-10 rounded-full border-2 border-blueGray-50 shadow -ml-4"
+                        ></img>
+                        <img
+                          src="/img/team-4-470x470.png"
+                          alt="..."
+                          className="w-10 h-10 rounded-full border-2 border-blueGray-50 shadow -ml-4"
+                        ></img>
+                      </div>
+                    </td>
+                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                      <span className="mr-2">
+                        {'GH₵'}
+                        {cooperative.minimalShare}
+                      </span>
+                    </td>
+                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-right">
+                      <i
+                        id="basic-button"
+                        aria-controls={open ? 'basic-menu' : undefined}
+                        aria-haspopup="true"
+                        aria-expanded={open ? 'true' : undefined}
+                        onClick={handleClick}
+                        className="fas fa-ellipsis-v hover:text-green cursor-pointer"
+                      ></i>
+                      <Menu
+                        id="basic-menu"
+                        anchorEl={anchorEl}
+                        open={open}
+                        onClose={handleClose}
+                        MenuListProps={{
+                          'aria-labelledby': 'basic-button',
+                        }}
+                      >
+                        <MenuItem onClick={handleClose}>Edit</MenuItem>
+                        <MenuItem onClick={handleClose}>Deactivate</MenuItem>
+                        <MenuItem onClick={handleClose}>Delete</MenuItem>
+                      </Menu>
+                    </td>
+                    <AlertDialog />
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
       <Modal

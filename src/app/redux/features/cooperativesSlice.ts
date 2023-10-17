@@ -39,8 +39,7 @@ export const addCooperative = createAsyncThunk(
         theme: 'colored',
       });
     } catch (err: any) {
-      console.log(err);
-      toast.error(err.response.data.error || serverError);
+      toast.error(err.response?.data.error || serverError);
     }
   },
 );
@@ -52,7 +51,31 @@ export const getAllCooperatives = createAsyncThunk(
       const response = await axiosPrivate.get('/cooperative/cooperatives');
       dispatch(setCooperatives(response.data.data.cooperatives));
     } catch (err: any) {
-      toast.error(err.response.data.message || serverError);
+      toast.error(err.response?.data.message || serverError);
+    }
+  },
+);
+
+export const deleteCooperative = createAsyncThunk(
+  'deleteCooperative',
+  async (id, { dispatch }) => {
+    try {
+      const response = await axiosPrivate.delete(
+        `/cooperative/delete-cooperative/${id}`,
+      );
+      toast.success(response.data.message, {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'colored',
+      });
+      dispatch(setCooperatives(response.data.data.cooperatives));
+    } catch (err: any) {
+      toast.error(err.response?.data.message || serverError);
     }
   },
 );

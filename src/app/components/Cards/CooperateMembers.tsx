@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 
 import TableDropdown from '../Dropdowns/TableDropdown';
 import { Button } from '@mui/material';
+import Link from 'next/link';
 
 export default function CooperateMembersTable({ color }: { color: string }) {
   return (
@@ -26,9 +27,9 @@ export default function CooperateMembersTable({ color }: { color: string }) {
               >
                 Cooperate Members
               </h3>
-              <Button className="hover:bg-black px-8 py-2 text-white bg-green">
+              <Link href={'/add-coorporate-member'} className="Mui-button">
                 Add Member
-              </Button>
+              </Link>
             </div>
           </div>
         </div>

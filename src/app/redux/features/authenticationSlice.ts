@@ -3,8 +3,9 @@ import {
   IUserDetails,
 } from '@/app/Interfaces/authenticationInterface';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from '@/app/utility/axios';
+import axios, { axiosPrivate } from '@/app/utility/axios';
 import { serverError, token, user } from '@/app/utility/constants';
+import { toast } from 'react-toastify';
 
 type authenticationState = {
   token: ITokens | undefined;
@@ -38,6 +39,18 @@ export const login = createAsyncThunk(
     }
   },
 );
+
+export const logout = createAsyncThunk('logout', async (_, { dispatch }) => {
+  try {
+    const response = await axiosPrivate.post(
+      '/authentication/invalidate-token',
+    );
+    localStorage.clear();
+    window.location.reload();
+  } catch (err: any) {
+    toast.error(err.response.data.error || serverError);
+  }
+});
 
 export const authentication = createSlice({
   name: 'authentication',

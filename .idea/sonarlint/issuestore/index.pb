@@ -99,3 +99,11 @@ X
 +src/app/redux/features/cooperativesSlice.ts,9\3\9364605e91e76b45c3461642c541f9916977d8e9
 L
 src/app/utility/constants.ts,7\d\7d31cbb5febe9397bad1b2c67f553a5f5619cfe6
+N
+src/app/utility/getInitials.ts,d\1\d137da1b300cbaf92fdbfc4ddf159492c4a7a0fc
+^
+.src/app/components/ConfirmationModal/index.tsx,6\2\6258942b9eb67f66bad9413eba80c10abe73b4ae
+Y
+)src/app/add-coorporate-member/formData.ts,d\f\dfab964c61c1e8a2d9aef18750e9a495fd348a72
+[
++src/app/add-coorporate-member/validation.ts,1\f\1fb96f15a4a63268df6cd489d0215daf9a79bc3d

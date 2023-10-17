@@ -12,11 +12,10 @@ export const axiosPrivate = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
-const token =
-  window !== undefined ? JSON.parse(localStorage.getItem('token')!) : '';
 axiosPrivate.interceptors.request.use(
   config => {
     if (!config.headers['Authorization']) {
+      const token = store?.getState().authentication.token;
       config.headers['Authorization'] = `Bearer ${token?.access}`;
     }
     return config;
@@ -40,8 +39,7 @@ axiosPrivate.interceptors.response.use(
 );
 
 const refreshToken = async () => {
-  const token =
-    window !== undefined ? JSON.parse(localStorage.getItem('token')!) : '';
+  const token = store.getState().authentication.token;
   const refresh = token?.refresh;
   try {
     const response = await axios.post(
@@ -50,17 +48,18 @@ const refreshToken = async () => {
       {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token.refresh}`,
+          Authorization: `Bearer ${token?.refresh}`,
         },
       },
     );
-
-    token['access'] = response?.data?.access_token;
+    if (token) {
+      token['access'] = response?.data?.access_token;
+    }
     store.dispatch(refreshTokenUpdate(response.data.access_token));
     localStorage.setItem('token', JSON.stringify(token));
     return response.data.access_token;
   } catch (error) {
-    // localStorage.clear();
-    // window.location.reload();
+    localStorage.clear();
+    window.location.reload();
   }
 };

@@ -3,6 +3,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/** {*/
+/*  font-size: 12px !important;*/
+/*}*/
 .Mui-focused fieldset {
   border-color: green !important;
 }
