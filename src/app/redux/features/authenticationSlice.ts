@@ -40,11 +40,10 @@ export const login = createAsyncThunk(
   },
 );
 
+// eslint-disable-next-line no-unused-vars
 export const logout = createAsyncThunk('logout', async (_, { dispatch }) => {
   try {
-    const response = await axiosPrivate.post(
-      '/authentication/invalidate-token',
-    );
+    await axiosPrivate.post('/authentication/invalidate-token');
     localStorage.clear();
     window.location.reload();
   } catch (err: any) {

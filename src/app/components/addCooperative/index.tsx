@@ -62,15 +62,7 @@ const AddCooperative = () => {
               alert(JSON.stringify(values, null, 2));
             }}
           >
-            {({
-              values,
-              errors,
-              touched,
-              handleBlur,
-              handleChange,
-              handleSubmit,
-              isSubmitting,
-            }) => (
+            {({ values, errors, touched, handleBlur, handleChange }) => (
               <form
                 onSubmit={event => {
                   event.preventDefault(); // @ts-ignore

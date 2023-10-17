@@ -1,4 +1,4 @@
-import { formData, FormData } from '@/app/add-coorporate-member/formData';
+import { formData } from '@/app/add-coorporate-member/formData';
 import { FormikValues } from 'formik';
 
 export const cooperativeMemberValidation = (values: FormikValues) => {

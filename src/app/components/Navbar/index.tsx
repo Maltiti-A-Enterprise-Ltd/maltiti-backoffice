@@ -9,7 +9,6 @@ import {
   Menu,
   MenuItem,
   Tooltip,
-  Typography,
 } from '@mui/material';
 import { Logout, PersonAdd, Settings } from '@mui/icons-material';
 import { useAppDispatch, useAppSelector } from '@/app/redux/hooks';

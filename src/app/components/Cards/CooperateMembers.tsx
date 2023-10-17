@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 // components
 
 import TableDropdown from '../Dropdowns/TableDropdown';
-import { Button } from '@mui/material';
 import Link from 'next/link';
 
 export default function CooperateMembersTable({ color }: { color: string }) {

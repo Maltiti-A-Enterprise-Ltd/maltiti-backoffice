@@ -2,13 +2,7 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-import {
-  Button,
-  CircularProgress,
-  Menu,
-  MenuItem,
-  Modal,
-} from '@mui/material';
+import { Button, CircularProgress, Menu, MenuItem, Modal } from '@mui/material';
 import AddCooperative from '@/app/components/addCooperative';
 import { modalStyle } from '@/app/utility/styles';
 import { Box } from '@mui/system';
