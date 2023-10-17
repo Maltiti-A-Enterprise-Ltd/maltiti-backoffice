@@ -1,19 +1,35 @@
 'use client';
 import FormNavBar from '../components/Navbar/formNavBar';
-import { Button, FormHelperText, TextField } from '@mui/material';
+import {
+  Button,
+  FormControl,
+  FormHelperText,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from '@mui/material';
 import React, { useEffect, useRef } from 'react';
 import SignaturePad from 'signature_pad';
 import { Formik } from 'formik';
-import { formData } from './formData';
-import { cooperativeMemberValidation } from './validation';
+import {
+  addCooperative,
+  getAllCooperatives,
+} from '../redux/features/cooperativesSlice';
+import { educationLevels, idType, regions } from '../utility/constants';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
 
 const AddMember = () => {
+  const dispatch = useAppDispatch();
+  const cooperativeOptions = useAppSelector(
+    state => state.cooperative.cooperativeOptions,
+  );
   const signaturePadRef = useRef(null);
 
   useEffect(() => {
     const canvas = document.querySelector('canvas');
     signaturePadRef.current = new SignaturePad(canvas);
-    // Other initialization code
+    dispatch(getAllCooperatives());
   }, []);
 
   return (
@@ -35,41 +51,133 @@ const AddMember = () => {
         </div>
         <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
           <Formik
-            initialValues={formData}
+            initialValues={{
+              cooperative: '',
+              name: '',
+              dob: '',
+              idType: '',
+              idNumber: '',
+              houseNumber: '',
+              gpsAddress: '',
+              phoneNumber: '',
+              community: '',
+              region: '',
+              district: '',
+              levelOfEducation: '',
+              mainOccupation: '',
+              secondaryOccupation: '',
+              cropsProduced: '',
+              farmSize: '',
+            }}
             validate={values => {
-              return cooperativeMemberValidation(values);
+              const errors = {
+                cooperative: '',
+                name: '',
+                dob: '',
+                idType: '',
+                idNumber: '',
+                houseNumber: '',
+                gpsAddress: '',
+                phoneNumber: '',
+                community: '',
+                region: '',
+                district: '',
+                levelOfEducation: '',
+                mainOccupation: '',
+                secondaryOccupation: '',
+                cropsProduced: '',
+                farmSize: '',
+              };
+              if (!values.name) {
+                errors.name = 'Name is required';
+              }
+              if (!values.community) {
+                errors.community = 'community is required';
+              }
+              if (!values.cooperative) {
+                errors.cooperative = 'Cooperative is required';
+              }
+              if (!values.dob) {
+                errors.dob = 'Date of birth is required';
+              }
+              if (!values.district) {
+                errors.district = 'District is required';
+              }
+              if (!values.cropsProduced) {
+                errors.cropsProduced = 'Crops produced is required';
+              }
+              if (!values.farmSize) {
+                errors.farmSize = 'Farm size is required';
+              }
+              if (!values.gpsAddress) {
+                errors.gpsAddress = 'GPS Address is required';
+              }
+              if (!values.houseNumber) {
+                errors.houseNumber = 'House number is required';
+              }
+              if (!values.idNumber) {
+                errors.idNumber = 'ID Number is required';
+              }
+              if (!values.idType) {
+                errors.idType = 'ID Type is required';
+              }
+              if (!values.levelOfEducation) {
+                errors.levelOfEducation =
+                  'Highest level of education is required';
+              }
+              if (!values.mainOccupation) {
+                errors.mainOccupation = 'Main Occupation is required';
+              }
+              if (!values.phoneNumber) {
+                errors.phoneNumber = 'Phone number is required';
+              }
+              if (!values.region) {
+                errors.region = 'Region is required';
+              }
+              return errors;
             }}
             onSubmit={values => {
               alert(JSON.stringify(values, null, 2));
             }}
           >
-            {({
-              values,
-              errors,
-              touched,
-              handleBlur,
-              handleChange,
-              handleSubmit,
-              isSubmitting,
-            }) => (
-              <form>
+            {({ values, errors, touched, handleBlur, handleChange }) => (
+              <form
+                onSubmit={event => {
+                  event.preventDefault(); // @ts-ignore
+                  dispatch(addCooperative(values));
+                }}
+              >
                 <h6 className="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">
                   Member Information and Identification
                 </h6>
                 <div className="flex flex-wrap">
                   <div className="w-full lg:w-6/12 px-4">
                     <div className="relative w-full mb-3">
-                      <TextField
-                        fullWidth
-                        id="name-of-cooperative"
-                        label="Name of cooperative"
-                        variant="outlined"
-                      />
-                      <FormHelperText
-                        id="name-of-cooperative"
-                        className={'text-red-800'}
-                      >
-                        Weight
+                      <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-label">
+                          Cooperative
+                        </InputLabel>
+                        <Select
+                          fullWidth
+                          id="cooperative"
+                          label="Cooperative"
+                          variant="outlined"
+                          name="cooperative"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          value={values.cooperative}
+                        >
+                          {cooperativeOptions.map(type => (
+                            <MenuItem key={type.value} value={type.value}>
+                              {type.name}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                      <FormHelperText id="id-type" className={'helper-text'}>
+                        {errors.cooperative &&
+                          touched.cooperative &&
+                          errors.cooperative}
                       </FormHelperText>
                     </div>
                   </div>
@@ -88,26 +196,46 @@ const AddMember = () => {
                       {errors.name && touched.name && errors.name}
                     </FormHelperText>
                   </div>
-                  <div className="w-full lg:w-6/12 px-4">
+                  <div className="w-full lg:w-6/12 px-4  mb-3">
                     <TextField
                       fullWidth
                       id="dob"
                       label="Date of Birth"
                       variant="outlined"
+                      type={'date'}
+                      name="dob"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.dob}
                     />
-                    <FormHelperText id="dob" className={'text-red-800'}>
-                      Weight
+                    <FormHelperText id="dob" className={'helper-text'}>
+                      {errors.dob && touched.dob && errors.dob}
                     </FormHelperText>
                   </div>
                   <div className="w-full lg:w-6/12 px-4">
-                    <TextField
-                      fullWidth
-                      id="id-type"
-                      label="ID Type"
-                      variant="outlined"
-                    />
-                    <FormHelperText id="id-type" className={'text-red-800'}>
-                      Weight
+                    <FormControl fullWidth>
+                      <InputLabel id="demo-simple-select-label">
+                        ID Type
+                      </InputLabel>
+                      <Select
+                        fullWidth
+                        id="id-type"
+                        label="ID Type"
+                        variant="outlined"
+                        name="idType"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.idType}
+                      >
+                        {idType.map(type => (
+                          <MenuItem key={type.value} value={type.value}>
+                            {type.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                    <FormHelperText id="id-type" className={'helper-text'}>
+                      {errors.idType && touched.idType && errors.idType}
                     </FormHelperText>
                   </div>
                   <div className="w-full lg:w-6/12 px-4">
@@ -116,9 +244,13 @@ const AddMember = () => {
                       id="id-number"
                       label="ID Number"
                       variant="outlined"
+                      name="idNumber"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.idNumber}
                     />
-                    <FormHelperText id="id-number" className={'text-red-800'}>
-                      Weight
+                    <FormHelperText id="id-number" className={'helper-text'}>
+                      {errors.idNumber && touched.idNumber && errors.idNumber}
                     </FormHelperText>
                   </div>
                 </div>
@@ -129,79 +261,117 @@ const AddMember = () => {
                   Address & Contact Information
                 </h6>
                 <div className="flex flex-wrap">
-                  <div className="w-full lg:w-12/12 px-4">
+                  <div className="w-full lg:w-6/12 px-4 mb-3">
                     <TextField
                       fullWidth
                       id="house-number"
                       label="House Number"
                       variant="outlined"
+                      name="houseNumber"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.houseNumber}
                     />
-                    <FormHelperText
-                      id="house-number"
-                      className={'text-red-800'}
-                    >
-                      Weight
+                    <FormHelperText id="house-number" className={'helper-text'}>
+                      {errors.houseNumber &&
+                        touched.houseNumber &&
+                        errors.houseNumber}
                     </FormHelperText>
                   </div>
-                  <div className="w-full lg:w-4/12 px-4">
+                  <div className="w-full lg:w-6/12 px-4 mb-3">
                     <TextField
                       fullWidth
                       id="gps-address"
                       label="GPS Address"
                       variant="outlined"
+                      name="gpsAddress"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.gpsAddress}
                     />
-                    <FormHelperText id="gps-address" className={'text-red-800'}>
-                      Weight
+                    <FormHelperText id="gps-address" className={'helper-text'}>
+                      {errors.gpsAddress &&
+                        touched.gpsAddress &&
+                        errors.gpsAddress}
                     </FormHelperText>
                   </div>
-                  <div className="w-full lg:w-4/12 px-4">
+                  <div className="w-full lg:w-6/12 px-4 mb-3">
                     <TextField
                       fullWidth
                       id="phone-number"
                       label="Phone Number"
                       variant="outlined"
+                      name="phoneNumber"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.phoneNumber}
+                      type={'number'}
                     />
-                    <FormHelperText
-                      id="phone-number"
-                      className={'text-red-800'}
-                    >
-                      Weight
+                    <FormHelperText id="phone-number" className={'helper-text'}>
+                      {errors.phoneNumber &&
+                        touched.phoneNumber &&
+                        errors.phoneNumber}
                     </FormHelperText>
                   </div>
-                  <div className="w-full lg:w-12/12 px-4">
+                  <div className="w-full lg:w-6/12 px-4 mb-3">
                     <TextField
                       fullWidth
                       id="name-of-community"
                       label="Name of Community"
                       variant="outlined"
+                      name="community"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.community}
                     />
                     <FormHelperText
                       id="name-of-community"
-                      className={'text-red-800'}
+                      className={'helper-text'}
                     >
-                      Weight
+                      {errors.community &&
+                        touched.community &&
+                        errors.community}
                     </FormHelperText>
                   </div>
-                  <div className="w-full lg:w-12/12 px-4">
-                    <TextField
-                      fullWidth
-                      id="region"
-                      label="Region"
-                      variant="outlined"
-                    />
-                    <FormHelperText id="region" className={'text-red-800'}>
-                      Weight
+                  <div className="w-full lg:w-6/12 px-4 mb-3">
+                    <FormControl fullWidth>
+                      <InputLabel id="demo-simple-select-label">
+                        Region
+                      </InputLabel>
+                      <Select
+                        fullWidth
+                        id="id-type"
+                        label="Regions"
+                        variant="outlined"
+                        name="region"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.region}
+                      >
+                        {regions.map(type => (
+                          <MenuItem key={type.value} value={type.value}>
+                            {type.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                    <FormHelperText id="region" className={'helper-text'}>
+                      {errors.region && touched.region && errors.region}
                     </FormHelperText>
                   </div>
-                  <div className="w-full lg:w-12/12 px-4">
+                  <div className="w-full lg:w-6/12 px-4 mb-3">
                     <TextField
                       fullWidth
                       id="district"
                       label="District"
                       variant="outlined"
+                      name="district"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.district}
                     />
-                    <FormHelperText id="district" className={'text-red-800'}>
-                      Weight
+                    <FormHelperText id="district" className={'helper-text'}>
+                      {errors.district && touched.district && errors.district}
                     </FormHelperText>
                   </div>
                 </div>
@@ -212,74 +382,114 @@ const AddMember = () => {
                   Education and Occupation
                 </h6>
                 <div className="flex flex-wrap">
-                  <div className="w-full lg:w-12/12 px-4">
-                    <TextField
-                      fullWidth
-                      id="education-level"
-                      label="Highest Level of Education"
-                      variant="outlined"
-                    />
+                  <div className="w-full lg:w-6/12 px-4 mb-3">
+                    <FormControl fullWidth>
+                      <InputLabel id="demo-simple-select-label">
+                        Highest Level of Education
+                      </InputLabel>
+                      <Select
+                        fullWidth
+                        id="levelOfEducation"
+                        label="Highest Level of Education"
+                        variant="outlined"
+                        name="levelOfEducation"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.levelOfEducation}
+                      >
+                        {educationLevels.map(type => (
+                          <MenuItem key={type.value} value={type.value}>
+                            {type.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
                     <FormHelperText
-                      id="education-level"
-                      className={'text-red-800'}
+                      id="levelOfEducation"
+                      className={'helper-text'}
                     >
-                      Weight
+                      {errors.levelOfEducation &&
+                        touched.levelOfEducation &&
+                        errors.levelOfEducation}
                     </FormHelperText>
                   </div>
-                  <div className="w-full lg:w-4/12 px-4">
+                  <div className="w-full lg:w-6/12 px-4 mb-3">
                     <TextField
                       fullWidth
                       id="main-occupation"
                       label="Main Occupation"
                       variant="outlined"
+                      name="mainOccupation"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.mainOccupation}
                     />
                     <FormHelperText
                       id="main-occupation"
-                      className={'text-red-800'}
+                      className={'helper-text'}
                     >
-                      Weight
+                      {errors.mainOccupation &&
+                        touched.mainOccupation &&
+                        errors.mainOccupation}
                     </FormHelperText>
                   </div>
-                  <div className="w-full lg:w-4/12 px-4">
+                  <div className="w-full lg:w-6/12 px-4">
                     <TextField
                       fullWidth
                       id="secondary-occupation"
                       label="Secondary Occupation"
                       variant="outlined"
+                      name="secondaryOccupation"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.secondaryOccupation}
                     />
                     <FormHelperText
                       id="secondary-occupation"
                       className={'text-red-800'}
                     >
-                      Weight
+                      {errors.secondaryOccupation &&
+                        touched.secondaryOccupation &&
+                        errors.secondaryOccupation}
                     </FormHelperText>
                   </div>
-                  <div className="w-full lg:w-4/12 px-4">
+                  <div className="w-full lg:w-6/12 px-4 mb-3">
                     <TextField
                       fullWidth
                       id="crops-produced"
                       label="Crops Produced"
                       variant="outlined"
+                      name="cropsProduced"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.cropsProduced}
                     />
                     <FormHelperText
                       id="crops-produced"
-                      className={'text-red-800'}
+                      className={'helper-text'}
                     >
-                      Weight
+                      {errors.cropsProduced &&
+                        touched.cropsProduced &&
+                        errors.cropsProduced}
                     </FormHelperText>
                   </div>
-                  <div className="w-full lg:w-4/12 px-4">
+                  <div className="w-full lg:w-6/12 px-4 mb-3">
                     <TextField
                       fullWidth
                       id="farm-size"
-                      label="Own Farm Size"
+                      label="Own Farm Size (Acres)"
                       variant="outlined"
+                      name="farmSize"
+                      type={'number'}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.farmSize}
                     />
                     <FormHelperText
                       id="own-farm-size"
-                      className={'text-red-800'}
+                      className={'helper-text'}
                     >
-                      Weight
+                      {errors.farmSize && touched.farmSize && errors.farmSize}
                     </FormHelperText>
                   </div>
                 </div>

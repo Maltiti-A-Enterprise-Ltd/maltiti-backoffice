@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import {
@@ -8,7 +8,6 @@ import {
   Menu,
   MenuItem,
   Modal,
-  Typography,
 } from '@mui/material';
 import AddCooperative from '@/app/components/addCooperative';
 import { modalStyle } from '@/app/utility/styles';

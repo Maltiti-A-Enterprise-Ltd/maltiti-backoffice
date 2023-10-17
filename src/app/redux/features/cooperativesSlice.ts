@@ -9,6 +9,7 @@ type cooperativeState = {
   status: 'idle' | 'fulfilled' | 'pending';
   getCooperativesStatus: 'idle' | 'fulfilled' | 'pending';
   isAddModalOpen: boolean;
+  cooperativeOptions: { name: string; value: string }[];
 };
 
 const initialState: cooperativeState = {
@@ -16,6 +17,7 @@ const initialState: cooperativeState = {
   status: 'idle',
   isAddModalOpen: false,
   getCooperativesStatus: 'idle',
+  cooperativeOptions: [],
 };
 
 export const addCooperative = createAsyncThunk(
@@ -91,6 +93,11 @@ export const cooperative = createSlice({
     },
     setCooperatives: (state, action) => {
       state.cooperatives = action.payload;
+      state.cooperativeOptions = action.payload.map(
+        (cooperative: ICooperative) => {
+          return { name: cooperative.name, value: cooperative.name };
+        },
+      );
     },
   },
   extraReducers(builder) {
