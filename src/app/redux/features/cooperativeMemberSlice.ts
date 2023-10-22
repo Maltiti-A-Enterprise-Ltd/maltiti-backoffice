@@ -3,7 +3,7 @@ import { axiosPrivate } from '@/app/utility/axios';
 import { serverError } from '@/app/utility/constants';
 import { toast } from 'react-toastify';
 import { ICooperativeMember } from '../../Interfaces/cooperativeMember.interface';
-import { router } from 'next/client';
+import { useRouter } from 'next/navigation';
 
 type cooperativeMemberState = {
   members: ICooperativeMember[];
@@ -31,7 +31,8 @@ export const addMember = createAsyncThunk(
         },
       );
       dispatch(updateMember(memberInfo));
-      await router.push('/dashboard');
+      const router = useRouter();
+      router.push('/dashboard');
       toast.success(response.data.message, {
         position: 'top-right',
         autoClose: 5000,
@@ -52,8 +53,8 @@ export const getAllMembers = createAsyncThunk(
   'getAllMembers',
   async (_, { dispatch }) => {
     try {
-      const response = await axiosPrivate.get('/login');
-      dispatch(setMembers(response.data.data));
+      const response = await axiosPrivate.get('/cooperative/members');
+      dispatch(setMembers(response.data.data.members));
       toast.success(response.data.message, {
         position: 'top-right',
         autoClose: 5000,
@@ -78,7 +79,7 @@ export const cooperativeMember = createSlice({
       state.members = [...state.members, action.payload];
     },
     setMembers: (state, action) => {
-      state.members = state.members.concat(action.payload);
+      state.members = action.payload;
     },
   },
   extraReducers(builder) {
