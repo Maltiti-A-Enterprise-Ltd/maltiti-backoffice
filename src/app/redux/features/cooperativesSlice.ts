@@ -95,7 +95,7 @@ export const cooperative = createSlice({
       state.cooperatives = action.payload;
       state.cooperativeOptions = action.payload.map(
         (cooperative: ICooperative) => {
-          return { name: cooperative.name, value: cooperative.name };
+          return { name: cooperative.name, value: cooperative.id };
         },
       );
     },

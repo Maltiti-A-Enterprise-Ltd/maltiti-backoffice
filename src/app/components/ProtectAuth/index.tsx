@@ -5,7 +5,7 @@ import { store } from '@/app/redux/store';
 
 export default function ProtectAuth(Component: any) {
   return function ProtectAuth(props: any) {
-    const token = store.getState().authentication.token;
+    const token = store.getState().authentication?.token;
 
     useEffect(() => {
       if (token) {

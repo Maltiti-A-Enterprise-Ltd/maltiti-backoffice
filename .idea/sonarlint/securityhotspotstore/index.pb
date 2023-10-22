@@ -112,4 +112,4 @@ _
 a
 1src/app/Interfaces/cooperativeMember.interface.ts,a\a\aaec24a0b3769c46233df027d91c5d3ad447b23a
 `
-0src/app/redux/features/cooperativeMemberSlice.js,b\4\b49b334c1af167183ad8324f2a5c1311297d4c1a
+0src/app/redux/features/cooperativeMemberSlice.ts,c\6\c6272ba5a392706981403018997607498c763162

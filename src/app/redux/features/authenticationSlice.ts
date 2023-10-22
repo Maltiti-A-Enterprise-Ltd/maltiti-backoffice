@@ -35,7 +35,7 @@ export const login = createAsyncThunk(
       );
       window.location.href = '/dashboard';
     } catch (err: any) {
-      dispatch(setError(err.response.data.message || serverError));
+      dispatch(setError(err.response?.data.message || serverError));
     }
   },
 );

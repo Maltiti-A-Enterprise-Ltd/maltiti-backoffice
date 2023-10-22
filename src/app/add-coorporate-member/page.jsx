@@ -32,6 +32,7 @@ const AddMember = () => {
   const status = useAppSelector(state => state.cooperativeMember.addStatus);
   const signaturePadRef = useRef(null);
   const [memberImage, setMemberImage] = useState('');
+  const [file, setFile] = useState(null);
 
   useEffect(() => {
     const canvas = document.querySelector('canvas');
@@ -41,6 +42,7 @@ const AddMember = () => {
 
   const handleImageUpload = event => {
     const file = event.target.files[0];
+    setFile(file);
     // Check if the file is an image
     if (file?.type.startsWith('image/')) {
       const reader = new FileReader();
@@ -74,7 +76,7 @@ const AddMember = () => {
         <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
           <Formik
             initialValues={{
-              image: '',
+              image: null,
               cooperative: '',
               name: '',
               dob: '',
@@ -86,10 +88,10 @@ const AddMember = () => {
               community: '',
               region: '',
               district: '',
-              levelOfEducation: '',
-              mainOccupation: '',
+              education: '',
+              occupation: '',
               secondaryOccupation: '',
-              cropsProduced: '',
+              crops: '',
               farmSize: '',
             }}
             validate={values => {
@@ -114,6 +116,7 @@ const AddMember = () => {
               handleBlur,
               handleChange,
               handleSubmit,
+              setFieldValue,
             }) => (
               <form onSubmit={handleSubmit}>
                 {/*<ImageUploadPreview*/}
@@ -155,10 +158,10 @@ const AddMember = () => {
                       accept="image/*"
                       type="file"
                       className="hidden"
-                      value={values.image}
                       onChange={e => {
                         handleChange(e);
                         handleImageUpload(e);
+                        setFieldValue('image', e.target.files[0]);
                       }}
                       onBlur={handleBlur}
                       name={'image'}
@@ -410,13 +413,13 @@ const AddMember = () => {
                       </InputLabel>
                       <Select
                         fullWidth
-                        id="levelOfEducation"
+                        id="education"
                         label="Highest Level of Education"
                         variant="outlined"
-                        name="levelOfEducation"
+                        name="education"
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        value={values.levelOfEducation}
+                        value={values.education}
                       >
                         {educationLevels.map(type => (
                           <MenuItem key={type.value} value={type.value}>
@@ -425,13 +428,10 @@ const AddMember = () => {
                         ))}
                       </Select>
                     </FormControl>
-                    <FormHelperText
-                      id="levelOfEducation"
-                      className={'helper-text'}
-                    >
-                      {errors.levelOfEducation &&
-                        touched.levelOfEducation &&
-                        errors.levelOfEducation}
+                    <FormHelperText id="education" className={'helper-text'}>
+                      {errors.education &&
+                        touched.education &&
+                        errors.education}
                     </FormHelperText>
                   </div>
                   <div className="w-full lg:w-6/12 px-4 mb-3">
@@ -440,18 +440,18 @@ const AddMember = () => {
                       id="main-occupation"
                       label="Main Occupation"
                       variant="outlined"
-                      name="mainOccupation"
+                      name="occupation"
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      value={values.mainOccupation}
+                      value={values.occupation}
                     />
                     <FormHelperText
                       id="main-occupation"
                       className={'helper-text'}
                     >
-                      {errors.mainOccupation &&
-                        touched.mainOccupation &&
-                        errors.mainOccupation}
+                      {errors.occupation &&
+                        touched.occupation &&
+                        errors.occupation}
                     </FormHelperText>
                   </div>
                   <div className="w-full lg:w-6/12 px-4">
@@ -480,18 +480,16 @@ const AddMember = () => {
                       id="crops-produced"
                       label="Crops Produced"
                       variant="outlined"
-                      name="cropsProduced"
+                      name="crops"
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      value={values.cropsProduced}
+                      value={values.crops}
                     />
                     <FormHelperText
                       id="crops-produced"
                       className={'helper-text'}
                     >
-                      {errors.cropsProduced &&
-                        touched.cropsProduced &&
-                        errors.cropsProduced}
+                      {errors.crops && touched.crops && errors.crops}
                     </FormHelperText>
                   </div>
                   <div className="w-full lg:w-6/12 px-4 mb-3">

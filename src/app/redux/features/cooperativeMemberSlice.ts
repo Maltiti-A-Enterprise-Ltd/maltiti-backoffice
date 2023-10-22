@@ -7,19 +7,51 @@ import { ICooperativeMember } from '../../Interfaces/cooperativeMember.interface
 type cooperativeMemberState = {
   members: ICooperativeMember[];
   addStatus: 'idle' | 'fulfilled' | 'pending';
+  status: 'idle' | 'fulfilled' | 'pending';
 };
 
 const initialState: cooperativeMemberState = {
   members: [],
   addStatus: 'idle',
+  status: 'idle',
 };
 
 export const addMember = createAsyncThunk(
   'addMember',
   async (memberInfo, { dispatch }) => {
     try {
-      const response = await axiosPrivate.post('/login', memberInfo);
+      const response = await axiosPrivate.post(
+        '/cooperative/add-member',
+        memberInfo,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        },
+      );
       dispatch(updateMember(memberInfo));
+      toast.success(response.data.message, {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'colored',
+      });
+    } catch (err: any) {
+      toast.error(err.response?.data.message || serverError);
+    }
+  },
+);
+
+export const getAllMembers = createAsyncThunk(
+  'getAllMembers',
+  async (_, { dispatch }) => {
+    try {
+      const response = await axiosPrivate.get('/login');
+      dispatch(setMembers(response.data.data));
       toast.success(response.data.message, {
         position: 'top-right',
         autoClose: 5000,
@@ -43,6 +75,9 @@ export const cooperativeMember = createSlice({
     updateMember: (state, action) => {
       state.members = [...state.members, action.payload];
     },
+    setMembers: (state, action) => {
+      state.members = state.members.concat(action.payload);
+    },
   },
   extraReducers(builder) {
     builder
@@ -54,10 +89,19 @@ export const cooperativeMember = createSlice({
       })
       .addCase(addMember.rejected, state => {
         state.addStatus = 'idle';
+      })
+      .addCase(getAllMembers.pending, state => {
+        state.status = 'pending';
+      })
+      .addCase(getAllMembers.fulfilled, state => {
+        state.status = 'fulfilled';
+      })
+      .addCase(getAllMembers.rejected, state => {
+        state.status = 'idle';
       });
   },
 });
 
-export const { updateMember } = cooperativeMember.actions;
+export const { updateMember, setMembers } = cooperativeMember.actions;
 
 export default cooperativeMember.reducer;
