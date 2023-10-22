@@ -1,4 +1,6 @@
 export interface ICooperativeMember {
+  image: string;
+  id: string;
   cooperative: string;
   name: string;
   dob: string;
@@ -10,9 +12,9 @@ export interface ICooperativeMember {
   community: string;
   region: string;
   district: string;
-  levelOfEducation: string;
-  mainOccupation: string;
+  education: string;
+  occupation: string;
   secondaryOccupation: string;
-  cropsProduced: string;
+  crops: string;
   farmSize: string;
 }

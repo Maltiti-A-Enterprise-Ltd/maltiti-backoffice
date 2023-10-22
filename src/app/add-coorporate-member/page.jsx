@@ -32,7 +32,6 @@ const AddMember = () => {
   const status = useAppSelector(state => state.cooperativeMember.addStatus);
   const signaturePadRef = useRef(null);
   const [memberImage, setMemberImage] = useState('');
-  const [file, setFile] = useState(null);
 
   useEffect(() => {
     const canvas = document.querySelector('canvas');
@@ -42,7 +41,7 @@ const AddMember = () => {
 
   const handleImageUpload = event => {
     const file = event.target.files[0];
-    setFile(file);
+
     // Check if the file is an image
     if (file?.type.startsWith('image/')) {
       const reader = new FileReader();
