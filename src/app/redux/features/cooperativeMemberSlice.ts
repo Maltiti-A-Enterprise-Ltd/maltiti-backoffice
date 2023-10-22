@@ -3,7 +3,6 @@ import { axiosPrivate } from '@/app/utility/axios';
 import { serverError } from '@/app/utility/constants';
 import { toast } from 'react-toastify';
 import { ICooperativeMember } from '../../Interfaces/cooperativeMember.interface';
-import { useRouter } from 'next/navigation';
 
 type cooperativeMemberState = {
   members: ICooperativeMember[];
@@ -31,8 +30,6 @@ export const addMember = createAsyncThunk(
         },
       );
       dispatch(updateMember(memberInfo));
-      const router = useRouter();
-      router.push('/dashboard');
       toast.success(response.data.message, {
         position: 'top-right',
         autoClose: 5000,
