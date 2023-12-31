@@ -1,13 +1,7 @@
-'use client';
 import Login from '@/app/components/login';
-import ProtectAuth from '@/app/components/ProtectAuth';
 
 function Home() {
-  return (
-    <main>
-      <Login />
-    </main>
-  );
+  return <Login />;
 }
 
-export default ProtectAuth(Home);
+export default Home;

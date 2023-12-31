@@ -1,5 +1,5 @@
 'use client';
-import FormNavBar from '../components/Navbar/formNavBar';
+import FormNavBar from '../Navbar/formNavBar';
 import {
   Button,
   CircularProgress,
@@ -12,19 +12,19 @@ import {
 } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
 import SignaturePad from 'signature_pad';
-import { getAllCooperatives } from '../redux/features/cooperativesSlice';
+import { getAllCooperatives } from '../../redux/features/cooperativesSlice';
 import {
   educationLevels,
   idType,
   regions,
   requiredFields,
-} from '../utility/constants';
-import { useAppDispatch, useAppSelector } from '../redux/hooks';
+} from '../../utility/constants';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { Formik } from 'formik';
 import Image from 'next/image';
-import { addMember } from '../redux/features/cooperativeMemberSlice';
+import { addMember } from '../../redux/features/cooperativeMemberSlice';
 
-const AddMember = () => {
+const AddMemberComponent = () => {
   const dispatch = useAppDispatch();
   const cooperativeOptions = useAppSelector(
     state => state.cooperative.cooperativeOptions,
@@ -35,18 +35,20 @@ const AddMember = () => {
 
   useEffect(() => {
     const canvas = document.querySelector('canvas');
+    // @ts-ignore
     signaturePadRef.current = new SignaturePad(canvas);
     dispatch(getAllCooperatives());
   }, [dispatch]);
 
-  const handleImageUpload = event => {
-    const file = event.target.files[0];
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
 
     // Check if the file is an image
     if (file?.type.startsWith('image/')) {
       const reader = new FileReader();
 
       reader.onload = e => {
+        // @ts-ignore
         setMemberImage(e.target.result);
       };
 
@@ -96,13 +98,16 @@ const AddMember = () => {
             validate={values => {
               const errors = {};
               for (const field in requiredFields) {
+                // @ts-ignore
                 if (!values[field]) {
+                  // @ts-ignore
                   errors[field] = requiredFields[field];
                 }
               }
               return errors;
             }}
             onSubmit={values => {
+              // @ts-ignore
               dispatch(addMember(values));
             }}
             validateOnMount={true}
@@ -160,7 +165,7 @@ const AddMember = () => {
                       onChange={e => {
                         handleChange(e);
                         handleImageUpload(e);
-                        setFieldValue('image', e.target.files[0]);
+                        setFieldValue('image', e.target.files?.[0]);
                       }}
                       onBlur={handleBlur}
                       name={'image'}
@@ -518,6 +523,7 @@ const AddMember = () => {
                   <div>
                     <Button
                       onClick={() => {
+                        // @ts-ignore
                         signaturePadRef.current.clear();
                       }}
                       className="mt-10 Mui-button"
@@ -548,4 +554,4 @@ const AddMember = () => {
   );
 };
 
-export default AddMember;
+export default AddMemberComponent;
