@@ -102,7 +102,7 @@ const ProductPage = () => {
                 </div>
 
                 <div className="text-[12px] inline-flex font-medium">
-                  Product Retail: ₵{product.retail}
+                  Product Retail: ₵{product.retail} 
                 </div>
 
                 <div className="text-[12px] inline-flex font-medium">
