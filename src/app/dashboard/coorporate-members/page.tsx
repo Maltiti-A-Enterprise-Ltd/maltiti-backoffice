@@ -1,4 +1,3 @@
-'use client';
 import CooperateMembersTable from '@/app/components/Cards/CooperateMembers';
 
 const CooperateMembers = () => {
