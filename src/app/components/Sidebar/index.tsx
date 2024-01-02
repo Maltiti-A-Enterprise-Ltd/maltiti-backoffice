@@ -143,6 +143,22 @@ export default function Sidebar() {
                   </div>
                 </Link>
               </li>
+
+              <li className="items-center">
+                <Link href="/dashboard/Product">
+                  <div
+                    className={
+                      'text-xs uppercase py-3 font-bold block hover:text-green ' +
+                      (currentPath === '/dashboard/coorperatives' &&
+                        'text-green')
+                    }
+                  >
+                    <i className="fas fa-plus"></i>
+                    {` `} {` `}
+                    ADD PRODUCT
+                  </div>
+                </Link>
+              </li>
             </ul>
 
             {/* Divider */}
