@@ -21,12 +21,14 @@ const initialState: authenticationState = {
   status: 'idle',
 };
 
-
 export const login = createAsyncThunk(
   'login',
   async (credentials, { dispatch }) => {
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/authentication/login`, credentials);
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/authentication/login`,
+        credentials,
+      );
       dispatch(updateUser(response.data.user));
       dispatch(
         updateToken({
@@ -44,7 +46,9 @@ export const login = createAsyncThunk(
 // eslint-disable-next-line no-unused-vars
 export const logout = createAsyncThunk('logout', async (_, { dispatch }) => {
   try {
-    await axiosPrivate.post('`${process.env.NEXT_PUBLIC_BACKEND_URL}/authentication/invalidate-token`');
+    await axiosPrivate.post(
+      '`${process.env.NEXT_PUBLIC_BACKEND_URL}/authentication/invalidate-token`',
+    );
     localStorage.clear();
     window.location.reload();
   } catch (err: any) {

@@ -144,7 +144,6 @@ export default function Sidebar() {
                 </Link>
               </li>
 
-
               <li className="items-center">
                 <Link href="/dashboard/Product">
                   <div
@@ -154,9 +153,9 @@ export default function Sidebar() {
                         'text-green')
                     }
                   >
-                  <i class="fas fa-plus"></i>
- {` `} {` `}
-                 ADD PRODUCT
+                    <i className="fas fa-plus"></i>
+                    {` `} {` `}
+                    ADD PRODUCT
                   </div>
                 </Link>
               </li>

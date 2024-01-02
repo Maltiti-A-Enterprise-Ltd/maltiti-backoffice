@@ -8,7 +8,7 @@ export const store = configureStore({
     authentication: authenticationReducer,
     cooperative: cooperativeReducer,
     cooperativeMember: cooperativeMemberReducer,
-    addMember:addMemberReducer
+    addMember: addMemberReducer,
   },
   devTools: process.env.NODE_ENV !== 'production',
 });

@@ -122,7 +122,7 @@ const AddMemberComponent = () => {
               handleSubmit,
               setFieldValue,
             }) => (
-              <form onSubmit={handleSubmit} >
+              <form onSubmit={handleSubmit}>
                 {/*<ImageUploadPreview*/}
                 {/*  // onImageUpload={imageFile => {*/}
                 {/*  //   values.image = imageFile;*/}
